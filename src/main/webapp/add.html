@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>添加页面~黑马程序员</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        tr{line-height: 50px;}
+        .jumbotron{background-color: white;}
+        span{color:red;}
+		.form-control{display: inline;}
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="alert alert-info" role="alert">
+    <div class="container">
+        <h2>请输入添加用户资料</h2>
+    </div>
+</div>
+<div class="jumbotron">
+<div class="container">
+        <form id="addUserForm">
+        <table align="center">
+            <colgroup>
+                <col width="100px">
+                <col width="500px;">
+            </colgroup>
+            <tr>
+                <td>
+                    <label for="name">用户名称</label>
+                </td>
+                <td>
+                    <input type="text" style="width: 300px;" class="form-control" name="name" id="name" placeholder="请输入用户名称">
+                    <span id="nameMsg"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="age">用户年龄</label>
+                </td>
+                <td>
+                    <input type="text" style="width: 300px;" class="form-control" name="age" id="age" placeholder="请输入用户年龄">
+                    <span id="ageMsg"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="category">分类名称</label>
+                </td>
+                <td>
+                    <input type="text" style="width: 300px;" class="form-control" id="category" name="category" placeholder="请输入用户分类名称">
+                    <span id="categoryMsg"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="desc">用户描述</label>
+                </td>
+                <td>
+                    <textarea rows="5" style="width: 300px;vertical-align:middle;" class="form-control" id="desc" name="desc" placeholder="请输入用户描述"></textarea>
+                    <span id="descMsg"></span>
+                </td>
+            </tr>
+
+           <tr>
+                <td colspan="2">
+                    <button type="submit" class="btn btn-primary btn-lg">添加用户</button>
+                    <span id="msg"></span>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+</div>
+</div>
+<div class="alert alert-info" style="position: absolute;bottom: 0px;width: 100%;margin-bottom: 0px;" role="alert">
+    <div class="container">
+        北京传智播客教育科技有限公司 版权所有Copyright 2006-2018，  All Rights Reserved 京ICP备08001421号 京公网安备110108007702
+    </div>
+</div>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    //1.给表单绑定一个submit事件
+    $(function(){
+        $("#addUserForm").submit(function(){
+            //2.在绑定的函数中对所有的输入框的内容一一校验。
+            var flag = checkName() && checkAge() && checkCategory() && checkDesc();
+            if(flag) {
+                //3.表单校验通过,发送AJAX请求
+                $.post("/userServlet",$("#addUserForm").serialize(),function(data){
+                    if(data.flag) {
+                        $("input,textarea").val("");
+                        location.href = "/success.html";
+                    }
+                })
+            }
+
+            return false;
+        });
+    });
+
+    function checkName() {
+        //1.获取name输入框的内容
+        var name = $("#name").val();
+        //2.定义正则表达式
+        var reg = /^\w+$/;
+
+        var flag = reg.test(name);
+        if(flag) {
+            $("#nameMsg").html("输入正确").css("color","green");
+        }else {
+            $("#nameMsg").html("输入有误").css("color","red");
+        }
+
+        return flag;
+    }
+
+
+    function checkAge() {
+        //1.获取name输入框的内容
+        var age = $("#age").val();
+        //2.定义正则表达式
+        var reg = /^\w+$/;
+
+        var flag = reg.test(age);
+        if(flag) {
+            //非空
+            var regGranterThanZero = /^[1-9]\d*(.\d+)?$/;
+            flag = regGranterThanZero.test(age);
+            if(flag) {
+                $("#ageMsg").html("输入正确").css("color","green");
+            }else {
+                $("#ageMsg").html("输入有误").css("color","red");
+            }
+        }else {
+            $("#ageMsg").html("输入有误").css("color","red");
+        }
+
+        return flag;
+    }
+
+    function checkCategory() {
+        //1.获取name输入框的内容
+        var category = $("#category").val();
+        //2.定义正则表达式
+        var reg = /^.+$/;
+
+        var flag = reg.test(category);
+        if(flag) {
+            $("#categoryMsg").html("输入正确").css("color","green");
+        }else {
+            $("#categoryMsg").html("输入有误").css("color","red");
+        }
+
+        return flag;
+    }
+
+
+    function checkDesc() {
+        //1.获取name输入框的内容
+        var desc = $("#desc").val();
+        //2.定义正则表达式
+        var reg = /^.+$/;
+
+        var flag = reg.test(desc);
+        if(flag) {
+            $("#descMsg").html("输入正确").css("color","green");
+        }else {
+            $("#descMsg").html("输入有误").css("color","red");
+        }
+
+        return flag;
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>查询页面~黑马程序员</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        tr{line-height: 50px;}
+        .jumbotron{background-color: white;}
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div class="alert alert-info" role="alert">
+    <div class="container">
+        <h2>根据查询条件搜索用户</h2>
+    </div>
+</div>
+<div class="jumbotron">
+<div class="container">
+    <!--搜索条件-->
+    <form id="searchForm" class="form-inline">
+        <div class="form-group">
+            <label for="name">用户名称</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="用户名称查询条件">
+        </div>
+        <div class="form-group">
+            <label for="minAge">年龄</label>
+            <input type="text" class="form-control"  id="minAge" name="minAge" placeholder="最小年龄">
+            ~<input type="text" class="form-control" id="maxAge" name="maxAge" placeholder="最大年龄">
+        </div>
+        <div class="form-group">
+            <label for="category">分类名称</label>
+            <input type="text" class="form-control" id="category" name="category" placeholder="分类名称查询条件" >
+        </div>
+        <input type="button" id="btnSearch" class="btn btn-primary" value="&nbsp;&nbsp;查&nbsp;&nbsp;&nbsp;&nbsp;询&nbsp;&nbsp;"></input>
+    </form>
+    <br/>
+    <!--数据表格-->
+    <table id="dataList" class="table table-bordered">
+        <tr class="danger">
+            <th>序号</th>
+            <th>商品名称</th>
+            <th>价格</th>
+            <th>分类名称</th>
+            <th>描述</th>
+        </tr>
+
+            <tr class="success">
+                <td>1</td>
+                <td>张三</td>
+                <td>18</td>
+                <td>普通用户</td>
+                <td>真的很普通</td>
+            </tr>
+            <tr class="success">
+                <td>2</td>
+                <td>马蓉</td>
+                <td>18</td>
+                <td>普通用户</td>
+                <td>很美、很漂亮</td>
+            </tr>
+            <tr class="success">
+                <td>3</td>
+                <td>宝强</td>
+                <td>23</td>
+                <td>管理员</td>
+                <td>最爱电影[王宝强 奸计][夏洛 特烦恼]</td>
+            </tr>
+
+    </table>
+</div>
+</div>
+<div class="alert alert-info" style="position: absolute;bottom: 0px;width: 100%;margin-bottom: 0px;" role="alert">
+    <div class="container">
+        北京传智播客教育科技有限公司 版权所有Copyright 2006-2018，  All Rights Reserved 京ICP备08001421号 京公网安备110108007702
+    </div>
+</div>
+
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    //页面加载完毕发送AJAX请求，查询所有用户的信息。
+    $(function(){
+        $.post("/userListServlet",function(data){
+        //删除表格中除了第一行以外的tr
+            $("#dataList  tr:gt(0)").remove();
+
+            $.each(data,function(i,user){
+                var name = user.name;
+                var age = user.age;
+                var category = user.category;
+                var desc = user.desc;
+                //alert(name + "--" + age + "--" + category + "--" + desc);
+                var tr = " <tr class=\"success\">\n" +
+                    "                <td>"+(i+1)+"</td>\n" +
+                    "                <td>"+name+"</td>\n" +
+                    "                <td>"+age+"</td>\n" +
+                    "                <td>"+category+"</td>\n" +
+                    "                <td>"+desc+"</td>\n" +
+                    "            </tr>";
+
+                $("#dataList tbody").append(tr);
+            });
+         });
+
+
+        //点击查询按钮按照条件查询
+        $("#btnSearch").click(function(){
+            //获取条件中内容
+
+            $.post("/userListServlet",$("#searchForm").serialize(),function(data){
+
+                //删除表格中除了第一行以外的tr
+                $("#dataList  tr:gt(0)").remove();
+
+                $.each(data,function(i,user){
+                    var name = user.name;
+                    var age = user.age;
+                    var category = user.category;
+                    var desc = user.desc;
+                    //alert(name + "--" + age + "--" + category + "--" + desc);
+                    var tr = " <tr class=\"success\">\n" +
+                        "                <td>"+(i+1)+"</td>\n" +
+                        "                <td>"+name+"</td>\n" +
+                        "                <td>"+age+"</td>\n" +
+                        "                <td>"+category+"</td>\n" +
+                        "                <td>"+desc+"</td>\n" +
+                        "            </tr>";
+
+                    $("#dataList tbody").append(tr);
+                });
+            })
+        });
+    });
+</script>
+</body>
+</html>
